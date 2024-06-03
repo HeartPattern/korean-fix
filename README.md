@@ -2,6 +2,8 @@
 
 Korean fix is a simple go program that fix seperation of korean characters in mac os file name.
 
+For example, `ㅇㅏㄴㄴㅕㅇ` to `안녕`
+
 ## Usage
 
 ```bash
