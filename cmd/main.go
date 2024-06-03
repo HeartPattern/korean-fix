@@ -9,17 +9,16 @@ import (
 )
 
 func main() {
-	cmd := flag.String("path", ".", "Path to scan")
+	path := flag.String("path", ".", "Path to scan")
+	dryRun := flag.Bool("dry-run", false, "Dry run")
 	flag.Parse()
 
-	path := *cmd
-
-	fmt.Printf("Path: %s\n", path)
+	fmt.Printf("Path: %s\n", *path)
 
 	scanCount := 0
 	processCount := 0
 
-	err := filepath.WalkDir(path, func(path string, d os.DirEntry, err error) error {
+	err := filepath.WalkDir(*path, func(path string, d os.DirEntry, err error) error {
 		scanCount++
 		if err != nil {
 			_, err := fmt.Fprintf(os.Stderr, "Error: %v\n", err)
@@ -35,6 +34,10 @@ func main() {
 		if processed != d.Name() {
 			processCount++
 			fmt.Printf("Rename: %s -> %s\n", d.Name(), processed)
+
+			if *dryRun {
+				return nil
+			}
 
 			err := os.Rename(path, filepath.Join(filepath.Dir(path), processed))
 
